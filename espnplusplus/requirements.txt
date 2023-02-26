@@ -4,3 +4,4 @@ sqlparse==0.4.3
 nba_api
 mysql-connector-python
 mysqlclient
+pandas
