@@ -11,8 +11,9 @@ class MySQLHandler:
         self._cnx = mysql.connector.connect(**kwargs)
         self._cursor = self._cnx.cursor()
 
-    def execute(self, operation: str, params: list = None, multi: bool = False, log_message: str = None):
-        log = (log_message is not None)
+    def execute(self, operation: str, params: list = None, multi: bool = False, log_message: str = None, log: bool = None):
+        if(log is None):
+            log = self.log
         try:
             if(log):
                 print(log_message + ': ', end = '')
@@ -165,7 +166,9 @@ class MySQLHandler:
     def rollback(self) -> None:
         self._cnx.rollback()
 
-    def close(self) -> None:
+    def close(self, commit: bool = True) -> None:
+        if(commit):
+            self.commit()
         self._cursor.close()
         self._cnx.close()
 
