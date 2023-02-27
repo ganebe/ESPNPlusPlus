@@ -72,7 +72,7 @@ if(__name__ == '__main__'):
     handler = MySQLHandler(
         host = 'localhost',
         user = 'root',
-        password = 'password'
+        password = '1234'
     )
     handler.drop_database('nba')
     handler.close()
@@ -80,7 +80,7 @@ if(__name__ == '__main__'):
     handler = MySQLHandler(
         host = 'localhost',
         user = 'root',
-        password = 'password',
+        password = '1234',
         autocommit = False
     )
 
