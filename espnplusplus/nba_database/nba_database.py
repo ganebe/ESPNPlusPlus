@@ -27,7 +27,7 @@ if(__name__ == '__main__'):
     cnx = mysql.connector.connect(
         host = 'localhost',
         user = 'root',
-        password = 'password'
+        password = 'Password2023'
     )
     cursor = cnx.cursor()
     print('\nSTART\n')
