@@ -2,6 +2,7 @@ from multiprocessing.dummy import active_children
 import nba_api.stats.static.teams as nba_teams
 import nba_api.stats.static.players as nba_players
 from nba_api.stats.endpoints import playercareerstats
+import requests.exceptions
 
 from mysql_handler import MySQLHandler
 import nba_schema
@@ -53,16 +54,21 @@ def create_players_table(handler: MySQLHandler) -> None:
     handler.commit()
 
 def create_player_season_stats_table(hander: MySQLHandler) -> None:
+    i = 1
     table_name = 'player_season_stats'
     table_description = nba_schema.TABLES[table_name]
     handler.create_table(table_name, table_description)
     active_players = nba_players.get_active_players()
     for player in active_players:
-        player_career_stats = playercareerstats.PlayerCareerStats(player_id = player['id'])
-        player_career_stats_dict = player_career_stats.get_normalized_dict()['SeasonTotalsRegularSeason']
-        for player_season_stats_dict in player_career_stats_dict:
-            player_season_stats_row = change_dict_keys(player_season_stats_dict, player_season_stats_columns)
-            handler.insert_data(table_name, player_season_stats_row, f"{player['full_name']}, {player_season_stats_dict['SEASON_ID']}, {player_season_stats_dict['TEAM_ABBREVIATION']}")
+        try:
+            player_career_stats = playercareerstats.PlayerCareerStats(player_id = player['id'], timeout= .5)
+            player_career_stats_dict = player_career_stats.get_normalized_dict()['SeasonTotalsRegularSeason']
+            for player_season_stats_dict in player_career_stats_dict:
+                player_season_stats_row = change_dict_keys(player_season_stats_dict, player_season_stats_columns)
+                handler.insert_data(table_name, player_season_stats_row, f"{player['full_name']}, {player_season_stats_dict['SEASON_ID']}, {player_season_stats_dict['TEAM_ABBREVIATION']}")
+        except requests.exceptions.Timeout:
+            print('Fuck' ,i)
+            i += 1
     handler.commit()
 
 def change_dict_keys(dictionary: dict, old_to_new_keys: dict) -> dict:

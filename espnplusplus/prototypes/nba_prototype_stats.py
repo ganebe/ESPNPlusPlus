@@ -16,7 +16,7 @@ start = time.time()
 
 #career = playercareerstats.PlayerCareerStats(player_id = lebron_james_id)
 
-c = playercareerstats.PlayerCareerStats(202681)
+c = playercareerstats.PlayerCareerStats(1631262)
 
 """
 c1 = playercareerstats.PlayerCareerStats(2544)
@@ -30,6 +30,10 @@ c8 = playercareerstats.PlayerCareerStats(201142)
 c9 = playercareerstats.PlayerCareerStats(201143)
 c10 = playercareerstats.PlayerCareerStats(201144)
 """
+
+for k, v in c.get_normalized_dict().items():
+    print(k, '\n')
+    print(v, '\n\n\n')
 
 d = c.get_normalized_dict()
 
