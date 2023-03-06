@@ -1,8 +1,9 @@
-from multiprocessing.dummy import active_children
 import nba_api.stats.static.teams as nba_teams
 import nba_api.stats.static.players as nba_players
 from nba_api.stats.endpoints import playercareerstats
 
+#from .mysql_handler import MySQLHandler
+#from . import nba_schema
 from mysql_handler import MySQLHandler
 import nba_schema
 
@@ -74,7 +75,7 @@ if(__name__ == '__main__'):
         user = 'root',
         password = 'password'
     )
-    handler.drop_database('nba')
+    #handler.drop_database('nba')
     handler.close()
 
     handler = MySQLHandler(
@@ -86,8 +87,12 @@ if(__name__ == '__main__'):
 
     handler.use_database(nba_schema.DB_NAME)
 
-    create_teams_table(handler)
-    create_players_table(handler)
-    create_player_season_stats_table(handler)
+    #create_teams_table(handler)
+    #create_players_table(handler)
+    #create_player_season_stats_table(handler)
+
+    handler._cursor.execute("SELECT * FROM players WHERE players.first_name = 'LeBron'")
+    for i in handler._cursor:
+        print(i)
 
     handler.close()
