@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'espnplusplus.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nba_database',
+        'NAME': 'nba',
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST': 'localhost',
