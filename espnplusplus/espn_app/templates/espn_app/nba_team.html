@@ -1,5 +1,7 @@
 {% extends "espn_app/base.html" %}
 {% load static %}
 {% block content %}
-
+    {% for item in all_teams%}
+        <p> {{ item }} <p/>
+    {% endfor %}
 {% endblock %}

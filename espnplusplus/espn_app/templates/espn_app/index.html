@@ -10,18 +10,18 @@
     <div class="img-box relative h-56 overflow-hidden rounded-lg md:h-96">
          <!-- Item 1 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">First Slide<img src="{% static 'espn_app/images/nfl.png' %}" alt=""></span>
+            <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">NFL <img src="{% static 'espn_app/images/nfl.png' %}" alt=""></span>
             <img src="{% static 'espn_app/images/nfl_bg.jpeg' %}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
         <!-- Item 2 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">Second Slide <img src="{% static 'espn_app/images/nba.png' %}" alt=""></span>
+            <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">NBA <img src="{% static 'espn_app/images/nba.png' %}" alt=""></span>
             <img src="{% static 'espn_app/images/nba_bg.jpg' %}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
         <!-- Item 3 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">Third Slide</span>
-            <img src="{% static 'espn_app/images/images.jpeg' %}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">WORLD CUP <img src="{% static 'espn_app/images/fifa.png' %}" alt=""></span>
+            <img src="{% static 'espn_app/images/soccer.jpeg' %}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
     </div>
     <!-- Slider indicators -->
@@ -44,5 +44,11 @@
         </span>
     </button>
 </div>
+
+    <script>
+        function redirectToView(url) {
+        window.location.href = url;
+        }
+    </script>
 
 {% endblock %}
