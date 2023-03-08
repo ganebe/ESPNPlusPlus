@@ -73,40 +73,32 @@ def delete_table(cursor: MySQLCursor, table_name: str) -> bool:
 
 # Data as dictionaries utils
 
-def insert_dict(cursor: MySQLCursor, table_name: str, data: dict) -> bool:
-    try:
-        columns = ', '.join(map(str, data.keys()))
-        values = list(data.values())
-        placeholders = ', '.join(['%s'] * len(data))
-        cursor.execute(
-            f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})",
-            values)
-    except mysql.connector.Error:
-        return False
-    else:
-        return True
+def insert_dict(cursor: MySQLCursor, table_name: str, data: dict) -> None:
+    columns = ', '.join(map(str, data.keys()))
+    values = list(data.values())
+    placeholders = ', '.join(['%s'] * len(data))
+    operation = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+    cursor.execute(operation, values)
 
 def update_dict(cursor: MySQLCursor, table_name: str, data: dict,
-                key_column: str = 'id') -> bool:
-    try:
-        columns = map(str, data.keys())
-        pairings = ', '.join(f'{column} = %s' for column in columns)
-        values = list(data.values())
-        cursor.execute(
-            f"UPDATE {table_name} SET {pairings} WHERE {key_column} = %s",
-            values + [data[key_column]])
-    except mysql.connector.Error:
-        return False
-    else:
-        return True
+                key_column: str = 'id') -> None:
+    columns = map(str, data.keys())
+    pairings = ', '.join(f'{column} = %s' for column in columns)
+    values = list(data.values())
+    operation = f"UPDATE {table_name} SET {pairings} WHERE {key_column} = %s"
+    cursor.execute(operation, values + [data[key_column]])
+
+def insert_or_update_dict(cursor: MySQLCursor, table_name: str,
+                          data: dict) -> None:
+    columns = ', '.join(map(str, data.keys()))
+    pairings = ', '.join(f'{column} = %s' for column in data.keys())
+    values = list(data.values())
+    placeholders = ', '.join(['%s'] * len(data))
+    operation = (f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+                 f" ON DUPLICATE KEY UPDATE {pairings}")
+    cursor.execute(operation, values + values)
 
 def delete_dict(cursor: MySQLCursor, table_name: str, data: dict,
-                key_column: str = 'id') -> bool:
-    try:
-        cursor.execute(
-            f"DELETE FROM {table_name} WHERE {key_column} = %s",
-            [data[key_column]])
-    except mysql.connector.Error:
-        return False
-    else:
-        return True
+                key_column: str = 'id') -> None:
+    operation = f"DELETE FROM {table_name} WHERE {key_column} = %s"
+    cursor.execute(operation, [data[key_column]])

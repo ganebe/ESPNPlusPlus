@@ -1,58 +1,56 @@
+from collections import deque
+
 import nba_api.stats.static.teams as nba_teams
 import nba_api.stats.static.players as nba_players
-from nba_api.stats.endpoints import playercareerstats
+from nba_api.stats.endpoints import CommonTeamRoster, TeamYearByYearStats, \
+    PlayerCareerStats, LeagueStandingsV3
 
-#from .mysql_handler import MySQLHandler
-#from . import nba_schema
-from mysql_handler import MySQLHandler
+import mysql.connector
+from mysql.connector.cursor import MySQLCursor
+
+import mysql_utils as utils
 import nba_schema
+import api_to_db_headers as api_to_db
 
-player_season_stats_columns = {
-    'PLAYER_ID'  : 'player_id',
-    'SEASON_ID'  : 'season_id',
-    'TEAM_ID'    : 'team_id',
-    'PLAYER_AGE' : 'player_age',
-    'GP'         : 'games_played',
-    'GS'         : 'games_started',
-    'MIN'        : 'minutes_played',
-    'FGM'        : 'field_goals_made',
-    'FGA'        : 'field_goals_attempted',
-    'FG_PCT'     : 'field_goal_percentage',
-    'FG3M'       : 'three_pointers_made',
-    'FG3A'       : 'three_pointers_attempted',
-    'FG3_PCT'    : 'three_pointer_percentage',
-    'FTM'        : 'free_throws_made',
-    'FTA'        : 'free_throws_attempted',
-    'FT_PCT'     : 'free_throw_percentage',
-    'OREB'       : 'offensive_rebounds',
-    'DREB'       : 'defensive_rebounds',
-    'REB'        : 'rebounds',
-    'AST'        : 'assists',
-    'STL'        : 'steals',
-    'BLK'        : 'blocks',
-    'TOV'        : 'turnovers',
-    'PF'         : 'personal_fouls',
-    'PTS'        : 'points'
-}
-
-def create_teams_table(handler: MySQLHandler) -> None:
+def update_teams_table(cursor: MySQLCursor) -> None:
     table_name = 'teams'
-    table_description = nba_schema.TABLES[table_name]
-    handler.create_table(table_name, table_description)
-    teams = nba_teams.get_teams()
-    for team in teams:
-        handler.insert_data(table_name, team, team['full_name'])
-    handler.commit()
+    # Create the table if it doesn't already exist.
+    operation = f"SHOW tables FROM {cursor._cnx.database} LIKE '{table_name}'"
+    cursor.execute(operation)
+    if(cursor.rowcount == 0):
+        table_description = nba_schema.TABLES[table_name]
+        utils.create_table(cursor, table_name, table_description)
+    # Add teams to the table.
+    teams = deque(nba_teams.get_teams())
+    while(teams):
+        team = teams.popleft()
+        team['logo'] = nba_schema.TEAM_LOGO_URL_FORMAT.format(team['id'])
+        api_to_db.change_dict_keys(team, api_to_db.HEADERS.get('teams'))
+        utils.insert_or_update_dict(cursor, table_name, team)
+    # Commit just in case autocommit is disabled.
+    cursor._cnx.commit()
 
-def create_players_table(handler: MySQLHandler) -> None:
+# TODO: Add enum for whether you want to update all, active, or inactive players
+def update_players_table(cursor: MySQLCursor) -> None:
     table_name = 'players'
-    table_description = nba_schema.TABLES[table_name]
-    handler.create_table(table_name, table_description)
-    active_players = nba_players.get_active_players()
-    for player in active_players:
-        handler.insert_data(table_name, player, player['full_name'])
-    handler.commit()
+    # Create the table if it doesn't already exist.
+    operation = f"SHOW tables FROM {cursor._cnx.database} LIKE '{table_name}'"
+    cursor.execute(operation)
+    if(cursor.rowcount == 0):
+        table_description = nba_schema.TABLES[table_name]
+        utils.create_table(cursor, table_name, table_description)
+    # Add players to the table.
+    players = deque(nba_players.get_players())
+    while(players):
+        player = players.popleft()
+        player['headshot'] = (nba_schema.PLAYER_HEADSHOT_URL_FORMAT
+                              .format(player['id']))
+        api_to_db.change_dict_keys(player, api_to_db.HEADERS.get('players'))
+        utils.insert_or_update_dict(cursor, table_name, player)
+    # Commit just in case autocommit is disabled.
+    cursor._cnx.commit()
 
+"""
 def create_player_season_stats_table(hander: MySQLHandler) -> None:
     table_name = 'player_season_stats'
     table_description = nba_schema.TABLES[table_name]
@@ -65,34 +63,25 @@ def create_player_season_stats_table(hander: MySQLHandler) -> None:
             player_season_stats_row = change_dict_keys(player_season_stats_dict, player_season_stats_columns)
             handler.insert_data(table_name, player_season_stats_row, f"{player['full_name']}, {player_season_stats_dict['SEASON_ID']}, {player_season_stats_dict['TEAM_ABBREVIATION']}")
     handler.commit()
-
-def change_dict_keys(dictionary: dict, old_to_new_keys: dict) -> dict:
-    return dict((old_to_new_keys[key], value) for (key, value) in dictionary.items() if key in old_to_new_keys)
+"""
 
 if(__name__ == '__main__'):
-    handler = MySQLHandler(
+    cnx = mysql.connector.connect(
         host = 'localhost',
         user = 'root',
         password = 'password'
     )
-    #handler.drop_database('nba')
-    handler.close()
+    cursor = cnx.cursor(buffered = True)
 
-    handler = MySQLHandler(
-        host = 'localhost',
-        user = 'root',
-        password = 'password',
-        autocommit = False
-    )
+    #utils.delete_database(cursor, nba_schema.DB_NAME + '2')
 
-    handler.use_database(nba_schema.DB_NAME)
+    utils.use_database(cursor, nba_schema.DB_NAME + '2')
+
+    update_teams_table(cursor)
+    update_players_table(cursor)
 
     #create_teams_table(handler)
     #create_players_table(handler)
     #create_player_season_stats_table(handler)
 
-    handler._cursor.execute("SELECT * FROM players WHERE players.first_name = 'LeBron'")
-    for i in handler._cursor:
-        print(i)
-
-    handler.close()
+    cnx.close()
