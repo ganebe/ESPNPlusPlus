@@ -1,0 +1,17 @@
+{% extends "espn_app/base.html" %}
+{% load static %}
+{% block content %}
+<br>
+</br>
+<img src= https://cdn.nba.com/headshots/nba/latest/1040x760/{{player_id}}.png alt="Team logo" width="200" height="200">
+<br/>
+{{Bios.first_name }} {{Bios.last_name}} (player id {{player_id}}) 
+<br/>
+points: {{Stats.points}} three pointer made {{Stats.three_pointer_made}}
+<br/>
+three pointers attempted {{Stats.three_pointer_attempted}} three pointer percentage {{Stats.three_pointer_percentage}}
+
+{% for item in Stats %}
+    {{item.points}}
+{% endfor %}
+{% endblock %}

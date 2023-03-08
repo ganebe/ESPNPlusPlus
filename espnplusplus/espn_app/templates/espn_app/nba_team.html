@@ -1,7 +1,19 @@
 {% extends "espn_app/base.html" %}
 {% load static %}
 {% block content %}
-    {% for item in all_teams%}
-        <p> {{ item }} <p/>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+    {% for item in Teams%}
+    <a href="{% url 'nba_team' item.id %}">
+    <img src= https://cdn.nba.com/logos/nba/{{ item.id }}/primary/L/logo.svg alt="Team logo" width="200" height="200">
+    </a>
+              {{ item.full_name }} founded {{ item.year_founded}} 
+             
     {% endfor %}
 {% endblock %}

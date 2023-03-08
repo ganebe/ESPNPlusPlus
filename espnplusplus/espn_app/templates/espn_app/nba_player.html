@@ -1,8 +1,13 @@
 {% extends "espn_app/base.html" %}
 {% load static %}
 {% block content %}
-<div class="hidden duration-700 ease-in-out" data-carousel-item>
-  <img src="{% static 'espn_app/images/nba_bg.jpg' %}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-</div>
-
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<a href="{% url 'trading_card' card_id=201580 %}">
+<img src ='https://cdn.nba.com/headshots/nba/latest/1040x760/201580.png' alt="Player headshots" width="400" height="300">
+</a>
 {% endblock %}

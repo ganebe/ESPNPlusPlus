@@ -1,0 +1,9 @@
+{% extends "espn_app/base.html" %}
+{% load static %}
+{% block content %}
+<br>
+</br>
+<img src= https://cdn.nba.com/logos/nba/{{ Target.id }}/primary/L/logo.svg alt="Team logo" width="200" height="200">
+ {{Target.full_name}} founded {{ Target.year_founded }}
+<br/>
+{% endblock %}

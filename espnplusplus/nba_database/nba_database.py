@@ -93,9 +93,9 @@ if(__name__ == '__main__'):
 
     handler.use_database(nba_schema.DB_NAME)
 
-    #create_teams_table(handler)
-    #create_players_table(handler)
-    #create_player_season_stats_table(handler)
+    create_teams_table(handler)
+    create_players_table(handler)
+    create_player_season_stats_table(handler)
 
     handler._cursor.execute("SELECT * FROM players WHERE players.first_name = 'LeBron'")
     for i in handler._cursor:
