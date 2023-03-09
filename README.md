@@ -52,3 +52,19 @@ pip3 install -r requirements.txt
 
 This will install everything you need for the django project to run on your computer
 
+<br/>
+
+## Running a mysql database server locally and connecting it via mysql connecter
+
+You'll need to run install all packagers from requriments.txt and install the MySql community edition
+
+here is the link for it if you haven't downloaded the MySql community edition and remember your root password!!
+```
+https://dev.mysql.com/downloads/installer/
+```
+Now you can create a local database by replacing "your_root_password" with your actual root password in create_database.py
+and excute the file.
+Notice once you have created the database, you can also uses the mysql workbench with a better gui to make query.
+In the mysql you can simply connect the database that you just created with the + button with the connection name as "nba_batabase".
+
+<br/>

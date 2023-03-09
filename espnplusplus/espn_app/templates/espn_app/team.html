@@ -1,0 +1,48 @@
+{% extends "espn_app/base.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<br>
+<div style="display:flex; align-items:center;">
+  <img src="https://cdn.nba.com/logos/nba/{{ Target.id }}/primary/L/logo.svg" alt="Team logo" width="200" height="200">
+  <p style="margin-left:10px;" class ="header-font">{{Target.full_name}} founded {{ Target.year_founded }}</p>
+</div>
+<div style="display:flex; justify-content:center;">
+  <p class = "members-font">2022-2023 Team Members</p>
+</div>
+<div class="image-container">
+  {% for players in CurrentMembers%}
+    <div class="image">
+        <a href="{% url 'trading_card' card_id=players.player_id %}">
+      <img src= "https://cdn.nba.com/headshots/nba/latest/1040x760/{{players.player_id}}.png" alt="player picture" width="200" height="200">
+      <p>
+      </p>
+        </a>
+    </div>
+  {% endfor%}
+</div>
+<style>
+  .image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .image {
+    margin: 10px;
+    border: 2px solid black; 
+  }
+  .image img {
+    max-width: 100%;
+    height: auto;
+  }
+  .members-font {
+    font-size: 50px;
+    font-weight: bold;
+  }
+  .header-font{
+    font-size: 20px;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "espn_app/base.html" %}
+{% load static %}
+{% block content %}
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<div class="image-container">
+
+{% for item in Teams %}
+  <div class="image">
+    <a href="{% url 'nba_team' item.id %}">
+      <img src="https://cdn.nba.com/logos/nba/{{ item.id }}/primary/L/logo.svg" alt="Team logo" width="200" height="200">
+      <div class="caption-container"><div class="caption">{{ item.full_name }} founded {{ item.year_founded }}</div></div>
+    </a>
+  </div>
+{% endfor %}
+</div>
+<style>
+  .image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .image {
+    margin: 10px;
+    text-align: center;
+  }
+  .image img {
+    max-width: 100%;
+    height: auto;
+  }
+  .caption-container {
+    flex-basis: 100%;
+  }
+  .caption {
+    padding: 10px;
+  }
+</style>
+{% endblock %}

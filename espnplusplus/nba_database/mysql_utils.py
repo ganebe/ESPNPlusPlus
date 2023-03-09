@@ -3,32 +3,29 @@
 
 import mysql.connector
 from mysql.connector import errorcode
+from mysql.connector.cursor import MySQLCursor
 
-import nba_schema
+# Database and table utils
 
-# DATABASE UTILS
-
-def use_database(cursor, database_name):
+def use_database(cursor: MySQLCursor, database_name: str) -> bool:
     try:
-        print(f'Using database "{database_name}": ', end='')
+        print(f"Using database '{database_name}': ", end='')
         cursor.execute(f"USE {database_name}")
     except mysql.connector.Error as e:
-        print(f'Database "{database_name}" does not exist.')
+        print(e.msg)
         if(e.errno == errorcode.ER_BAD_DB_ERROR):
             if(create_database(cursor, database_name)):
-                print(f'Using database "{database_name}": OK.')
+                print(f"Using database '{database_name}': OK.")
                 cursor._cnx.database = database_name
                 return True
-        else:
-            print(e.msg)
         return False
     else:
         print('OK')
         return True
 
-def create_database(cursor, database_name):
+def create_database(cursor: MySQLCursor, database_name: str) -> bool:
     try:
-        print(f'Creating database "{database_name}": ', end='')
+        print(f"Creating database '{database_name}': ", end='')
         cursor.execute(
             f"CREATE DATABASE {database_name} DEFAULT CHARACTER SET 'utf8'")
     except mysql.connector.Error as e:
@@ -38,9 +35,9 @@ def create_database(cursor, database_name):
         print('OK')
         return True
 
-def delete_database(cursor, database_name):
+def delete_database(cursor: MySQLCursor, database_name: str) -> bool:
     try:
-        print(f'Deleting database "{database_name}": ', end='')
+        print(f"Deleting database '{database_name}': ", end='')
         cursor.execute(f"DROP DATABASE {database_name}")
     except mysql.connector.Error as e:
         print(e.msg)
@@ -49,12 +46,11 @@ def delete_database(cursor, database_name):
         print('OK')
         return True
 
-# TABLE UTILS
-
-def create_table(cursor, table_name, table_description):
+def create_table(cursor: MySQLCursor, table_name: str,
+                 table_description: str) -> bool:
     try:
         database_name = cursor._cnx.database
-        print(f'Creating table "{database_name}.{table_name}": ', end='')
+        print(f"Creating table '{database_name}.{table_name}': ", end='')
         cursor.execute(table_description)
     except mysql.connector.Error as e:
         print(e.msg)
@@ -63,10 +59,10 @@ def create_table(cursor, table_name, table_description):
         print('OK')
         return True
 
-def delete_table(cursor, table_name):
+def delete_table(cursor: MySQLCursor, table_name: str) -> bool:
     try:
         database_name = cursor._cnx.database
-        print(f'Deleting table "{database_name}.{table_name}": ', end='')
+        print(f"Deleting table '{database_name}.{table_name}': ", end='')
         cursor.execute(f"DROP TABLE {table_name}")
     except mysql.connector.Error as e:
         print(e.msg)
@@ -75,65 +71,42 @@ def delete_table(cursor, table_name):
         print('OK')
         return True
 
-# DATA UTILS
+# Data as dictionaries utils
 
-def insert_data(cursor, table_name, values_dict, data_name=None):
+def insert_dict(cursor: MySQLCursor, table_name: str, data: dict) -> bool:
     try:
-        database_name = cursor._cnx.database
-        print(
-            f'Inserting \'{data_name}\' into '
-            f'\'{database_name}.{table_name}\': ',
-            end='')
-        columns = ', '.join(map(str, values_dict.keys()))
-        values = list(values_dict.values())
-        placeholders = ', '.join(['%s'] * len(values))
+        columns = ', '.join(map(str, data.keys()))
+        values = list(data.values())
+        placeholders = ', '.join(['%s'] * len(data))
         cursor.execute(
             f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})",
             values)
-    except mysql.connector.Error as e:
-        print(e.msg)
+    except mysql.connector.Error:
         return False
     else:
-        print('OK')
         return True
 
-def update_data(cursor, table_name, values_dict, values_id='id', data_name=None):
+def update_dict(cursor: MySQLCursor, table_name: str, data: dict,
+                key_column: str = 'id') -> bool:
     try:
-        database_name = cursor._cnx.database
-        print(
-            f'Updating \'{data_name}\' in '
-            f'\'{database_name}.{table_name}\': ',
-            end='')
-        columns = map(str, values_dict.keys())
+        columns = map(str, data.keys())
         pairings = ', '.join(f'{column} = %s' for column in columns)
-        values = list(values_dict.values())
-        condition = f'{values_id} = \'{values_dict[values_id]}\''
+        values = list(data.values())
         cursor.execute(
-            f"UPDATE {table_name} SET {pairings} WHERE {condition}",
-            values)
-    except mysql.connector.Error as e:
-        print(e.msg)
+            f"UPDATE {table_name} SET {pairings} WHERE {key_column} = %s",
+            values + [data[key_column]])
+    except mysql.connector.Error:
         return False
     else:
-        print('OK')
         return True
 
-if(__name__ == '__main__'):
-    cnx = mysql.connector.connect(
-        host = 'localhost',
-        user = 'root',
-        password = 'password'
-    )
-    cursor = cnx.cursor()
-    use_database(cursor, nba_schema.DB_NAME)
-    for table_name, table_description in nba_schema.TABLES.items():
-        create_table(cursor, table_name, table_description)
-    lebron = {
-        'id': 2544,
-        'first_name': 'LeBron',
-        'last_name': 'James',
-        'full_name': 'LeBron James',
-        'is_active': 1
-    }
-    insert_data(cursor, 'players', lebron, 'LeBron James')
-    # cnx.close()
+def delete_dict(cursor: MySQLCursor, table_name: str, data: dict,
+                key_column: str = 'id') -> bool:
+    try:
+        cursor.execute(
+            f"DELETE FROM {table_name} WHERE {key_column} = %s",
+            [data[key_column]])
+    except mysql.connector.Error:
+        return False
+    else:
+        return True

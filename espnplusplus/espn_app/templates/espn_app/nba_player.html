@@ -1,0 +1,34 @@
+{% extends "espn_app/base.html" %}
+{% load static %}
+{% block content %}
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<div style="display:flex; justify-content: space-between;">
+    <a href="{% url 'trading_card' card_id=2544 %}">
+        <p class="header-font">LeBron James</p>
+        <img src='https://cdn.nba.com/headshots/nba/latest/1040x760/2544.png' alt="Player headshots" width="400" height="300">
+    </a>
+    <a href="{% url 'trading_card' card_id=201142 %}">
+        <p class="header-font"> Kevin Durant</p>
+        <img src='https://cdn.nba.com/headshots/nba/latest/1040x760/201142.png' alt="Player headshots" width="400" height="300">
+    </a>
+    <a href="{% url 'trading_card' card_id=203507 %}">
+        <p class="header-font">Giannis Antetokounmpo</p>
+        <img src='https://cdn.nba.com/headshots/nba/latest/1040x760/203507.png' alt="Player headshots" width="400" height="300">
+    </a>
+</div>
+
+
+
+
+<style>
+    .header-font{
+        font-size: 20px;
+        font-weight: bold;
+      }
+    </style>
+{% endblock %}
