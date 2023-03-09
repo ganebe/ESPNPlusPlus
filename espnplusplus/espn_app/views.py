@@ -22,14 +22,25 @@ def nba_teams(request):
 
 def nba_team(request, team_id):
     Target = Team.objects.get(id = team_id)
-    return render(request,'espn_app/team.html'      , {"Target" : Target})
+    AllMember = PlayerSeasonStats.objects.filter(team_id= team_id)
+    CurrentMembers = AllMember.filter(season_id = "2022-23")
+   
+    context ={
+        "Target" : Target,
+        "CurrentMembers" : CurrentMembers,
+    }
+    return render(request,'espn_app/team.html', context)
 
 def trading_card(request, card_id):
-    Stats = PlayerSeasonStats.objects.filter(player_id = card_id)
-    Bios = Player.objects.get(id = card_id)
+    AllStats = PlayerSeasonStats.objects.filter(player_id = card_id)
+    Stats = AllStats[len(AllStats) - 1]
+    Bios = Player.objects.get(id=card_id)
+    
     context = {
         'Stats' : Stats,
         'Bios' : Bios,
         'player_id': card_id,
     }
+
     return render(request, 'espn_app/trading_card.html' , context )
+

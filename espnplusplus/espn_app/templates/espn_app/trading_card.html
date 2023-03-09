@@ -1,17 +1,104 @@
 {% extends "espn_app/base.html" %}
 {% load static %}
 {% block content %}
+<!-- This code is heavily based on w3 school-->
+<!-- https://www.w3schools.com/howto/howto_css_flip_card.asp-->
 <br>
-</br>
-<img src= https://cdn.nba.com/headshots/nba/latest/1040x760/{{player_id}}.png alt="Team logo" width="200" height="200">
-<br/>
-{{Bios.first_name }} {{Bios.last_name}} (player id {{player_id}}) 
-<br/>
-points: {{Stats.points}} three pointer made {{Stats.three_pointer_made}}
-<br/>
-three pointers attempted {{Stats.three_pointer_attempted}} three pointer percentage {{Stats.three_pointer_percentage}}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p style="text-align: center;" class="header-font">{{Bios.full_name}}</p>
+<br>
+<br>
+<br>
+<div class="flip-card">
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <img src="https://cdn.nba.com/headshots/nba/latest/1040x760/{{player_id}}.png" alt="player picture" width="500" height="500" alt="Avatar">
+        <p style="position: absolute; bottom: 0; left: 0;"  class = "card-font">points: {{Stats.points}} blocks: {{Stats.blocks}}
+          steals: {{Stats.steals}}  assists: {{Stats.assists}} </p>
+        </div>
+      <div class="flip-card-back">
+        <div style="display:flex; align-items:center;" class = "card-font">
+          Player age: {{Stats.player_age}} Games played {{Stats.game_played}}
+          <br>
+          Games started: {{Stats.game_started}} Minutes played {{ Stats.minites_played}}
+          <br>
+          Field goals made: {{Stats.field_goals_made}} Field goals attempted: {{Stats.field_goals_attempted}}
+          <br>
+          Field goal percentage: {{Stats.field_goal_percentage}} Three pointers made: {{Stats.three_pointers_made}}
+          <br>
+          Three pointers attempted: {{Stats.three_pointers_attempted}} Three pointer percentage: {{Stats.three_pointer_percentage}}
+          <br>
+          Free throws made: {{Stats.free_throws_made}} Free throws attempted: {{Stats.free_throws_attempted}}
+          <br>
+          Free throw percentage {{Stats.free_throw_percentage}} Offensive rebounds {{Stats.offensive_rebounds}}
+          <br>
+          Defensive rebounds {{Stats.defensive_rebounds}}  Total rebounds {{Stats.rebounds}}
 
-{% for item in Stats %}
-    {{item.points}}
-{% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .flip-card {
+        background-color: transparent;
+        width: 600px;
+        height: 600px;
+        border: 1px solid #00000;
+        perspective: 1000px;
+        margin: auto; 
+        position: relative; 
+        top: calc(50% - (200px / 2) - 50px); /* Subtract 50px to account for the margin */ /* Move it vertically to the middle of its parent */
+      }
+    
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+    
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden; 
+      backface-visibility: hidden;
+    }
+    
+    .flip-card-front {
+      background-color: #ffff99;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .flip-card-back {
+      background-color: #ffff99;
+      color: black;
+      transform: rotateY(180deg);
+    }
+
+    .header-font{
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+    .card-font{
+      font-size: 20px;
+    }
+  </style>
+  
 {% endblock %}
