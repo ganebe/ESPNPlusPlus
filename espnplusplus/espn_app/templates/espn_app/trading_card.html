@@ -1,104 +1,214 @@
-{% extends "espn_app/base.html" %}
-{% load static %}
-{% block content %}
-<!-- This code is heavily based on w3 school-->
-<!-- https://www.w3schools.com/howto/howto_css_flip_card.asp-->
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<p style="text-align: center;" class="header-font">{{Bios.full_name}}</p>
-<br>
-<br>
-<br>
-<div class="flip-card">
-    <div class="flip-card-inner">
-      <div class="flip-card-front">
-        <img src="https://cdn.nba.com/headshots/nba/latest/1040x760/{{player_id}}.png" alt="player picture" width="500" height="500" alt="Avatar">
-        <p style="position: absolute; bottom: 0; left: 0;"  class = "card-font">points: {{Stats.points}} blocks: {{Stats.blocks}}
-          steals: {{Stats.steals}}  assists: {{Stats.assists}} </p>
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'espn_app/style.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet"></link>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
+    <link rel="icon" type="=" href="{% static 'espn_app/images/logo-main.png' %}">
+    <title>ESPN++ | {{Bios.full_name}}</title>
+</head>
+<body>
+    
+<nav class="nav2 bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+    <div class="container flex flex-wrap items-center justify-between mx-auto">
+        <a href="{% url 'home' %}" class="flex items-center">
+            <img src="{% static 'espn_app/images/logo-main.png' %}" class="h-6 mr-3 sm:h-9" alt="ESPN++ Logo" />
+            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">ESPN++</span>
+        </a>
+        <div class="flex md:order-2">
+            <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search"
+                aria-expanded="false"
+                class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1">
+                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Search</span>
+            </button>
+            <div class="relative hidden md:block">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Search icon</span>
+                </div>
+                <form  method="post" action="">
+                  {% csrf_token  %}
+                  <input type="text" name="query" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." required>
+              </form>  
+            </div>
+            <button data-collapse-toggle="navbar-search" type="button"
+                class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                aria-controls="navbar-search" aria-expanded="false">
+                <span class="sr-only">Open menu</span>
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </button>
         </div>
-      <div class="flip-card-back">
-        <div style="display:flex; align-items:center;" class = "card-font">
-          Player age: {{Stats.player_age}} Games played {{Stats.game_played}}
-          <br>
-          Games started: {{Stats.game_started}} Minutes played {{ Stats.minites_played}}
-          <br>
-          Field goals made: {{Stats.field_goals_made}} Field goals attempted: {{Stats.field_goals_attempted}}
-          <br>
-          Field goal percentage: {{Stats.field_goal_percentage}} Three pointers made: {{Stats.three_pointers_made}}
-          <br>
-          Three pointers attempted: {{Stats.three_pointers_attempted}} Three pointer percentage: {{Stats.three_pointer_percentage}}
-          <br>
-          Free throws made: {{Stats.free_throws_made}} Free throws attempted: {{Stats.free_throws_attempted}}
-          <br>
-          Free throw percentage {{Stats.free_throw_percentage}} Offensive rebounds {{Stats.offensive_rebounds}}
-          <br>
-          Defensive rebounds {{Stats.defensive_rebounds}}  Total rebounds {{Stats.rebounds}}
-
-      </div>
+        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
+            <div class="relative mt-3 md:hidden">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <input type="text" id="search-navbar"
+                    class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search...">
+            </div>
+            <ul
+                class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <li>
+                    <a href="{% url 'home' %}"
+                        class="block py-2 pl-3 pr-4 text-xl text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">HOME</a>
+                </li>
+                <li>
+                    <a href="{% url 'nba_player' %}"
+                        class="block py-2 pl-3 pr-4 text-xl text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+                        aria-current="page">PLAYERS</a>
+                </li>
+                <li>
+                    <a href="{% url 'nba_teams' %}"
+                        class="block py-2 pl-3 pr-4 text-xl text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">TEAMS</a>
+                </li>
+            </ul>
+        </div>
     </div>
+</nav>
+
+<section class="main">
+    <div class="main-container">
+       <!-- This code is heavily based on w3 school-->
+    <!-- https://www.w3schools.com/howto/howto_css_flip_card.asp-->
+    <h1 style="text-align: center;" class="header-font">{{Bios.full_name}}</h1>
+    <br>
+    <br>
+    <br>
+    <div class="flip-card">
+        <div class="flip-card-inner">
+          
+          <div class="flip-card-front">
+          
+
+
+            
+            <img src="https://cdn.nba.com/headshots/nba/latest/1040x760/{{player_id}}.png" alt="player picture" width="500" height="500" alt="Avatar">
+            <p class = "card-font">Points: {{Stats.points}} Blocks: {{Stats.blocks}}
+              Steals: {{Stats.steals}}  Assists: {{Stats.assists}} </p>
+            </div>
+          <div class="flip-card-back">
+            <p>Player age: {{Stats.player_age}} </p><p>Games played: {{Stats.games_played}}</p>
+            <p>Games started: {{Stats.games_started}} </p><p>Minutes played: {{ Stats.minutes_played}}</p>
+            <p>Field goals made: {{Stats.field_goals_made}} </p><p>Field goals attempted: {{Stats.field_goals_attempted}}</p>
+            <p>Field goal percentage: {{Stats.field_goal_percentage}} </p><p>Three pointers made: {{Stats.three_pointers_made}}</p>
+            <p>Three pointers attempted: {{Stats.three_pointers_attempted}} </p><p>Three pointer percentage: {{Stats.three_pointer_percentage}}</p>
+            <p>Free throws made: {{Stats.free_throws_made}} </p><p></p>Free throws attempted: {{Stats.free_throws_attempted}}</p>
+            <p>Free throw percentage: {{Stats.free_throw_percentage}} </p><p>Offensive rebounds: {{Stats.offensive_rebounds}}</p>
+            <p>Defensive rebounds: {{Stats.defensive_rebounds}} Total </p><p>Rebounds: {{Stats.rebounds}}</p>
+               
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    
   </div>
+   
+  </section>
   
-  <style>
-    .flip-card {
-        background-color: transparent;
-        width: 600px;
-        height: 600px;
-        border: 1px solid #00000;
-        perspective: 1000px;
-        margin: auto; 
-        position: relative; 
-        top: calc(50% - (200px / 2) - 50px); /* Subtract 50px to account for the margin */ /* Move it vertically to the middle of its parent */
-      }
-    
-    .flip-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      transition: transform 0.8s;
-      transform-style: preserve-3d;
-    }
-    
-    .flip-card:hover .flip-card-inner {
-      transform: rotateY(180deg);
-    }
-    
+<style>
+  .flip-card {
+      background-color: transparent;
+      width: 600px;
+      height: 600px;
+      border: 1px solid #00000;
+      perspective: 1000px;
+      margin: auto; 
+      position: relative; 
+      top: calc(50% - (200px / 2) - 50px); /* Subtract 50px to account for the margin */ /* Move it vertically to the middle of its parent */
+      padding-top: 2rem;
 
-    .flip-card-front, .flip-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      -webkit-backface-visibility: hidden; 
-      backface-visibility: hidden;
     }
-    
-    .flip-card-front {
-      background-color: #ffff99;
-      color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .flip-card-back {
-      background-color: #ffff99;
-      color: black;
-      transform: rotateY(180deg);
-    }
-
-    .header-font{
-        font-size: 30px;
-        font-weight: bold;
-      }
-
-    .card-font{
-      font-size: 20px;
-    }
-  </style>
   
-{% endblock %}
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    border-radius: 1rem;
+
+  }
+  
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  
+
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; 
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  
+  .flip-card-front {
+    background-color: #bbc114;
+    color: black;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  .flip-card-front p, .flip-card-back p {
+    padding-top: 0.5rem;
+  }
+  
+  .flip-card-back {
+    background-color: #bbc114;
+    color: black;
+    transform: rotateY(180deg);
+  }
+
+  .header-font{
+      font-size: 30px;
+      font-weight: bold;
+      padding-top: 2rem;
+    }
+
+  .card-font{
+    font-size: 20px;
+  }
+
+
+</style>
+
+    
+<script type="text/javascript" src="{% static 'espn_app/app.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
+</body>
+</html>
