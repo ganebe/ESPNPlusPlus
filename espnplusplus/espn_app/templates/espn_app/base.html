@@ -8,13 +8,15 @@
     <link href="{% static 'espn_app/style.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet"></link>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
-    <title>ESPN++</title>
+    <link rel="icon" type="=" href="{% static 'espn_app/images/logo-main.png' %}">
+    <title>ESPN++ Home</title>
 </head>
 <body>
     <!-- navbar from flowbite - (tailwind css component library) --> 
     <nav class="fixed top-0 w-full z-50 bg-transparent shadow-b-2xl px-2 sm:px-4 py-2.5">
         <div class="container flex flex-wrap items-center justify-between mx-auto">
-        <a href={% url 'home' %} class="flex items-center">
+        <a href="{% url 'home' %}" class="flex items-center">
+            <img src="{% static 'espn_app/images/logo-main.png' %}" class="h-6 mr-3 sm:h-9" alt="ESPN++ Logo" />
             <span class="self-center text-xl font-semibold whitespace-nowrap text-yellow-300">ESPN++</span>
         </a>
         <div class="flex md:order-2">
@@ -27,7 +29,10 @@
             <svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
             <span class="sr-only">Search icon</span>
             </div>
-            <input type="text" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
+            <form  method="post" action="">
+                {% csrf_token  %}
+                <input type="text" name="query" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." required>
+            </form>  
         </div>
         <button data-collapse-toggle="navbar-search" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-search" aria-expanded="false">
             <span class="sr-only">Open menu</span>
@@ -39,18 +44,18 @@
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
             </div>
-            <input type="text" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-transparent focus:ring-blue-500 focus:border-blue-500 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
+            <input type="text" name="query" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-transparent focus:ring-blue-500 focus:border-blue-500 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </div>
             <ul class="flex flex-col p-4 mt-4 bg-transparent md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:dark:bg-gray-900">
             <li>
-                <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 text-xl text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">HOME</a>
+                <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 text-xl text-white rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">HOME</a>
             </li>
             <li>
-                <a href="{% url 'nba_player' %}" class="block py-2 pl-3 pr-4 text-xl text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0">TOP PLAYERS</a>
+                <a href="{% url 'nba_player' %}" class="block py-2 pl-3 pr-4 text-xl text-white rounded hover:bg-gray-50 hover:text-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0" >PLAYERS</a>
 
             </li>
             <li>
-                <a href="{% url 'nba_teams' %}" class="block py-2 pl-3 pr-4 text-xl text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0">NBA TEAMS</a>
+                <a href="{% url 'nba_teams' %}" class="block py-2 pl-3 pr-4 text-xl text-white rounded hover:bg-gray-50 hover:text-blue-700 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">TEAMS</a>
             </li>
             </ul>
         </div>
