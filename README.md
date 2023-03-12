@@ -62,9 +62,20 @@ here is the link for it if you haven't downloaded the MySql community edition an
 ```
 https://dev.mysql.com/downloads/installer/
 ```
-Now you can create a local database by replacing "your_root_password" with your actual root password in create_database.py
-and excute the file.
-Notice once you have created the database, you can also uses the mysql workbench with a better gui to make query.
-In the mysql you can simply connect the database that you just created with the + button with the connection name as "nba_batabase".
+Now you can create a local database using MySql Workbench
+
+<br/>
+
+## Hosting this web application locally 
+
+Before hosting the web appplication, you would need to create a database that contains data for the nba players.
+
+You can do so by running nba_database.py, but  it may failed since the API that we are using are super unreliable so
+
+I would recommend to just import the "old_nba_database" into your local mysql database.
+
+Once your database contains the data about the players then you will have to change your mysql root password in settings.py.
+
+After you are all set and you just run python mange.py runserver to host to web app.
 
 <br/>
